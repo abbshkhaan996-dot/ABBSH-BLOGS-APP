@@ -1,10 +1,3 @@
-/* ===========================================================
-   ABBSH BLOGS — backend API (Module 3: Database Integration)
-   Node.js + Express, JWT auth, bcrypt password hashing,
-   MongoDB storage via Mongoose (replaces the JSON files
-   used in Module 2).
-   =========================================================== */
-
 require("dotenv").config();
 
 const express = require("express");
@@ -265,6 +258,10 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", database: mongoose.connection.readyState === 1 ? "connected" : "not connected" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Abbsh Blogs backend running on http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Abbsh Blogs backend running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
