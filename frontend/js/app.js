@@ -1,11 +1,4 @@
-/* ===========================================================
-   ABBSH BLOGS — shared app logic
-   Data now lives on the backend (Node.js + Express, JSON-file
-   storage). The browser only keeps the JWT token and a cached
-   copy of the logged-in user for instant UI rendering.
-   =========================================================== */
-
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "api";
 
 const TOKEN_KEY = "abbsh_blogs_token";
 const USER_KEY = "abbsh_blogs_user";
