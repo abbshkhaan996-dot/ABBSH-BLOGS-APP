@@ -23,10 +23,31 @@ app.use(cors());
 app.use(express.json({ limit: "10mb" })); // 10mb to allow base64 cover images
 
 /* ---------- database connection ---------- */
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("MongoDB connection error:", err.message));
+mongoose.set("bufferCommands", false); 
+let dbConnection = null;  
+function connectToDatabase() {
+  if (dbConnection && mongoose.connection.readyState === 1) return dbConnection;
+  dbConnection = mongoose
+    .connect(MONGODB_URI)
+    .then((m) => {
+      console.log("Connected to MongoDB");
+          return m;
+    })
+ .catch((err) => {
+   console.error("MongoDB connection error:", err.message);
+   dbConnection = null;
+   throw err;
+ });
+  return dbConnection; 
+}
+app.use(async (req, res, next) => {
+  try {
+    await connectToDatabase();
+    next();
+  } catch (err) { 
+    res.status(503).json({ error: "Database unavailable, please try again in a moment." });
+  }
+});
 
 /* ---------- helpers ---------- */
 function excerptOf(content) {
